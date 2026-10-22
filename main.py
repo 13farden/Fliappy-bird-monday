@@ -10,6 +10,8 @@ clock = time.Clock()
 FPS = 60
 
 player_rect = Rect(150, 200, 100, 100)
+
+#функция генерация труб
 def generate_tudes(count,
                     tube_width = 140,
                     gap = 240,
@@ -18,6 +20,7 @@ def generate_tudes(count,
                     distance = 650):
     tubes = []
     start_x = window_size[0]
+    #размеры труб
     for i in range(count):
         height = randint(min_height, max_height)
         tor_tude = Rect(start_x, 0, tube_width, height)
@@ -26,13 +29,16 @@ def generate_tudes(count,
         start_x += distance
 
     return tubes
+# цикл игры
 while 1:
     for e in event.get():
         if e.type == QUIT:
             quit()
+        # управления кнопками
     keys = key.get_pressed()
     if keys[K_w]: player_rect.y -= 15
     if keys[K_s]: player_rect.y += 15
+    # окно и обновления окна
     window.fill("sky blue")
     draw.rect(window, (0, 0, 0), player_rect)
     display.update()
