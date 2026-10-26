@@ -38,6 +38,8 @@ gravity = 0.4 #!!!!!!!!!!!!!!!!
 y_vel = 0.0 #!!!!!!!!!!!!!!!!
 IMPULSE = -7.0 #!!!!!!!!!!!!!!!!
 
+lose = False
+
 while 1:
     for e in event.get():
         if e.type == QUIT:
@@ -52,19 +54,26 @@ while 1:
 
     if player_rect.bottom >= window_size[1]: #!!!!!!!!!
         player_rect.bottom = window_size[1]#!!!!!!!!!
+        lose = True
+        y_vel = 0
 
     if player_rect.top <= 0:#!!!!!!!!!
         player_rect.top = 0#!!!!!!!!!
+        lose = True
+        y_vel = 0
     
     
     window.fill("sky blue")
     for tube in tubes[:]: 
-        tube.x -= 5
+        if not lose:
+            tube.x -= 5
         if tube.right < 0:
             tubes.remove(tube)
             continue
         draw.rect(window, (0, 255, 0), tube)
-
+        if player_rect.colliderect(tube):
+            lose = True
+            y_vel = 0
     if len(tubes) < 8:
         tubes += generate_tubes(150)
     
