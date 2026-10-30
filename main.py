@@ -11,6 +11,15 @@ FPS = 60
 #!!!                x    y    w    h
 player_rect = Rect(150, 200, 100, 100)
 
+background = image.load("lesson 6\\lesson 6\\Fliappy-bird-monday\\back.jpg")
+background = transform.scale(background, window_size)
+
+bird = image.load("lesson 6\\lesson 6\\Fliappy-bird-monday\\bird.png")
+bird = transform.scale(bird, (100, 100))
+
+tube_top_image = image.load("lesson 6\\lesson 6\\Fliappy-bird-monday\\tube_top.png")
+tube_bottom_image = image.load("lesson 6\\lesson 6\\Fliappy-bird-monday\\tube_bottom.png")
+
 def generate_tubes(count, 
                    tube_width = 140, 
                    gap = 240, 
@@ -54,12 +63,21 @@ while 1:
     if keys[K_UP] or keys[K_w]:
         if not lose:
             y_vel = IMPULSE 
+    if keys[K_r] and lose:
+        lose = False
+        score = 0
+        tubes = generate_tubes(150)
+        player_rect.x = 150
+        player_rect.y = 200
+        y_vel = 0
+
     #if keys[K_DOWN] or keys[K_s]: y_vel = 5
 
     if player_rect.bottom >= window_size[1]: #!!!!!!!!!
         player_rect.bottom = window_size[1]#!!!!!!!!!
         lose = True
         y_vel = 0
+        
 
     if player_rect.top <= 0:#!!!!!!!!!
         player_rect.top = 0#!!!!!!!!!
@@ -67,7 +85,8 @@ while 1:
         y_vel = 0
     
     
-    window.fill("sky blue")
+    #window.fill("sky blue")
+    window.blit(background, (0, 0))
     for tube in tubes[:]: 
         if not lose:
             tube.x -= 5
@@ -75,19 +94,30 @@ while 1:
             tubes.remove(tube)
             score += 0.5
             continue
-        draw.rect(window, (0, 255, 0), tube)
+        #draw.rect(window, (0, 255, 0), tube)
+        if tube.y == 0:
+            pipe_image = tube_top_image
+        else:
+            pipe_image = tube_bottom_image
+        pipe = transform.scale(pipe_image, (tube.width, tube.height))
+        window.blit(pipe, tube)
         if player_rect.colliderect(tube):
             lose = True
             y_vel = 0
     if len(tubes) < 8:
         tubes += generate_tubes(150)
     
-    draw.rect(window, (0, 255, 0), player_rect) #!!!!! 0 - 255
+    #draw.rect(window, (0, 255, 0), player_rect) #!!!!! 0 - 255
+    window.blit(bird, player_rect)
 
     score_text = my_font.render(f"Score: {int(score)}", True, "black")
     window.blit(score_text, (20, 20))
     if lose:
         lose_text = my_font.render("GAME OVER!", True, "red")
         window.blit(lose_text, (280, 250))
+
+    if lose:
+            Ress_text = my_font.render("PRESS R TO RESTART", True, "red")
+            window.blit(Ress_text, (250, 290))
     display.update()
     clock.tick(FPS)
