@@ -39,17 +39,21 @@ y_vel = 0.0 #!!!!!!!!!!!!!!!!
 IMPULSE = -7.0 #!!!!!!!!!!!!!!!!
 
 lose = False
+score = 0
+my_font = font.Font(None, 50)
 
 while 1:
     for e in event.get():
         if e.type == QUIT:
             quit()
-
-    y_vel += gravity 
-    player_rect.y += int(y_vel)
+    if not lose:
+        y_vel += gravity 
+        player_rect.y += int(y_vel)
 
     keys = key.get_pressed()
-    if keys[K_UP] or keys[K_w]: y_vel = IMPULSE 
+    if keys[K_UP] or keys[K_w]:
+        if not lose:
+            y_vel = IMPULSE 
     #if keys[K_DOWN] or keys[K_s]: y_vel = 5
 
     if player_rect.bottom >= window_size[1]: #!!!!!!!!!
@@ -69,6 +73,7 @@ while 1:
             tube.x -= 5
         if tube.right < 0:
             tubes.remove(tube)
+            score += 0.5
             continue
         draw.rect(window, (0, 255, 0), tube)
         if player_rect.colliderect(tube):
@@ -78,5 +83,8 @@ while 1:
         tubes += generate_tubes(150)
     
     draw.rect(window, (0, 255, 0), player_rect) #!!!!! 0 - 255
+
+    score_text = my_font.render(f"Score: {int(score)}", True, "black")
+    window.blit(score_text, (20, 20))
     display.update()
     clock.tick(FPS)
