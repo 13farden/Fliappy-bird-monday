@@ -86,5 +86,8 @@ while 1:
 
     score_text = my_font.render(f"Score: {int(score)}", True, "black")
     window.blit(score_text, (20, 20))
+    if lose:
+        lose_text = my_font.render("GAME OVER!", True, "red")
+        window.blit(lose_text, (280, 250))
     display.update()
     clock.tick(FPS)
